@@ -5,7 +5,19 @@ terraform {
       version = "~> 2.13"
     }
   }
+
+# Remote backend configuration for storing Terraform state in S3
+backend "s3" { 
+    bucket         = "vault-mdeey-my-terraform-state-bucket" # S3 bucket for state storage
+    key            = "production/terraform.tfstate"          # Path within the bucket for the state file
+    region         = "us-east-1"                             # Update if your bucket is in a different region
+    encrypt        = true                                    # Enable server-side encryption
+    # dynamodb_table = "terraform-locks"                     # Optional: for state locking (create this table if needed)
+  }
+
 }
+
+
 
 # Helm provider configuration for deploying charts to the EKS cluster.
 provider "helm" {
