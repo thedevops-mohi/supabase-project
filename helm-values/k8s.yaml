@@ -14,9 +14,10 @@ spec:
       labels:
         app: my-app
     spec:
-      serviceAccountName: default  # use the SA with IRSA
+      # Use the service account configured for IRSA or Pod Identity to access AWS resources
+      serviceAccountName: default  # update if you have a custom SA with Pod Identity association
       imagePullSecrets:
-        - name: dockerhub-secret
+        - name: dockerhub-secret  # DockerHub image pull secret
       containers:
         - name: my-app
           image: auwalu5/tshoot:1.0
@@ -25,14 +26,14 @@ spec:
           volumeMounts:
             - name: secrets-store-inline
               mountPath: /tmp
-              readOnly: true
+              readOnly: true  # Mount secrets from AWS Secrets Manager as read-only
       volumes:
         - name: secrets-store-inline
           csi:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: "supabase-db-secrets"
+              secretProviderClass: "supabase-db-secrets"  # Reference to SecretProviderClass for AWS Secrets Manager
 
 ---
 apiVersion: v1
@@ -41,8 +42,8 @@ metadata:
   name: my-app-service
   namespace: default
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: "alb" 
-    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    service.beta.kubernetes.io/aws-load-balancer-type: "alb"  # Use AWS Load Balancer Controller to provision an ALB
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"  # Make the ALB public
 spec:
   type: LoadBalancer
   selector:

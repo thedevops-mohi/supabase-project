@@ -22,26 +22,11 @@ This repository contains Terraform and Helm configurations for deploying an EKS 
 
 ## Usage
 
-1. **Provision Infrastructure**
+**Provision Infrastructure**
    ```sh
    terraform init
    terraform apply
    ```
-
-2. **Install Helm Releases**
-   ```sh
-   terraform apply -target=module.helm
-   ```
-
-3. **Apply SecretProviderClass Example**
-   ```sh
-   kubectl apply -f helm-values/supabase.yaml
-   ```
-
-## Example: Mounting AWS Secrets in Pods
-
-See `helm-values/supabase.yaml` for an example of mounting an AWS Secrets Manager secret using the CSI driver.
-
 ## Requirements
 
 - AWS CLI configured
